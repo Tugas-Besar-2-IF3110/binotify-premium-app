@@ -6,6 +6,7 @@ import './Registration.css'
 const Registration = () => {
     const [nama, setNama] = useState('');
     const [username, setUsername] = useState('');
+    const [errorUsername, setErrorUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -13,6 +14,19 @@ const Registration = () => {
     const register = (e: any) => {
         e.preventDefault();
         
+    }
+
+    const checkValidUsername = async (username: string) => {
+        if (username) {
+            await axios.get(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/user/check-username/${username}`).then(response => {
+                if (response.data.length === 0) {
+                    setUsername(username);
+                } else {
+                    setUsername('');
+                    setErrorUsername('Username sudah digunakan');
+                }
+            });
+        }
     }
 
     return (
@@ -30,15 +44,15 @@ const Registration = () => {
                         <input type="text" placeholder="Nama" onChange={(e) => setNama(e.target.value)} />
 
                         <label className="label-register">Username</label>
-                        <input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
+                        <input type="text" placeholder="Username" onChange={(e) => checkValidUsername(e.target.value)} />
                         <div className="buttonOrMessageHolder">
-                            <p className="error register-message" id="error-username" hidden></p>
+                            {errorUsername && <p className="error register-message mt-3" id="error-username">{errorUsername}</p>}
                         </div>
 
                         <label className="label-register">Email</label>
                         <input type="text" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
                         <div className="buttonOrMessageHolder">
-                            <p className="error register-message" id="error-email" hidden></p>
+                            <p className="error register-message mt-3" id="error-email" hidden></p>
                         </div>
 
                         <label className="label-register">Password</label>

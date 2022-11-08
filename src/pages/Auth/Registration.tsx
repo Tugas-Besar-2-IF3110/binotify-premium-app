@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { debounce } from 'lodash'
 import Navbar from '../../components/Navbar'
 import './Registration.css'
 
@@ -8,25 +9,55 @@ const Registration = () => {
     const [username, setUsername] = useState('');
     const [errorUsername, setErrorUsername] = useState('');
     const [email, setEmail] = useState('');
+    const [errorEmail, setErrorEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
+    const checkValidUsername = debounce(async (username: string) => {
+        setErrorUsername('');
+        if (username) {
+            await axios.get(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/user/check-username/${username}`).then(response => {
+                if (response.data.error) {
+                    setUsername('');
+                    setErrorUsername(response.data.error);
+                } else {
+                    if (response.data.length === 0) {
+                        setUsername(username);
+                    } else {
+                        setUsername('');
+                        setErrorUsername('Username sudah digunakan');
+                    }
+                }
+            });
+        } else {
+            setUsername('');
+        }
+    }, 1000);
+
+    const checkValidEmail = debounce(async (email: string) => {
+        setErrorEmail('');
+        if (email) {
+            await axios.get(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/user/check-email/${email}`).then(response => {
+                if (response.data.error) {
+                    setEmail('');
+                    setErrorEmail(response.data.error);
+                } else {
+                    if (response.data.length === 0) {
+                        setEmail(email);
+                    } else {
+                        setEmail('');
+                        setErrorEmail('Email sudah digunakan');
+                    }
+                }
+            });
+        } else {
+            setEmail('');
+        }
+    }, 1000);
 
     const register = (e: any) => {
         e.preventDefault();
         
-    }
-
-    const checkValidUsername = async (username: string) => {
-        if (username) {
-            await axios.get(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/user/check-username/${username}`).then(response => {
-                if (response.data.length === 0) {
-                    setUsername(username);
-                } else {
-                    setUsername('');
-                    setErrorUsername('Username sudah digunakan');
-                }
-            });
-        }
     }
 
     return (
@@ -46,13 +77,13 @@ const Registration = () => {
                         <label className="label-register">Username</label>
                         <input type="text" placeholder="Username" onChange={(e) => checkValidUsername(e.target.value)} />
                         <div className="buttonOrMessageHolder">
-                            {errorUsername && <p className="error register-message mt-3" id="error-username">{errorUsername}</p>}
+                            {errorUsername && <p className="error register-message mt-3">{errorUsername}</p>}
                         </div>
 
                         <label className="label-register">Email</label>
-                        <input type="text" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
+                        <input type="text" placeholder="Email" onChange={(e) => checkValidEmail(e.target.value)} />
                         <div className="buttonOrMessageHolder">
-                            <p className="error register-message mt-3" id="error-email" hidden></p>
+                            {errorEmail && <p className="error register-message mt-3">{errorEmail}</p>}
                         </div>
 
                         <label className="label-register">Password</label>

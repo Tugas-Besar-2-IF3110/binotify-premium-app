@@ -1,4 +1,6 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+
 import Navbar from '../../components/Navbar'
 import './Login.css'
 
@@ -29,7 +31,7 @@ const Login = () => {
                         <div className="buttonOrMessageHolder">
                             <button className="login-button" type="submit">Login</button>
                         </div>
-                        <p className="label-login"><span>Not registered ? </span><a id="reg-link" href="register">Register here</a></p>
+                        <p className="label-login"><span>Not registered ? </span><Link id="reg-link" to="/register">Register here</Link></p>
                     </form>
                 </div>
             </div>

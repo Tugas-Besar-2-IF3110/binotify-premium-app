@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { useCookies } from 'react-cookie'
 import { debounce } from 'lodash'
+
 import Navbar from '../../components/Navbar'
 import './Registration.css'
 
@@ -13,6 +16,7 @@ const Registration = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorRegister, setErrorRegister] = useState('');
+    const [cookies, setCookies] = useCookies();
 
     const checkValidUsername = debounce(async (username: string) => {
         setErrorUsername('');
@@ -75,7 +79,7 @@ const Registration = () => {
                 username: username,
                 name: nama
             }).then(response => {
-                console.log(response);
+                setCookies('binotify_premium_token', response.data.token);
             });
         }
     }
@@ -119,7 +123,7 @@ const Registration = () => {
                         <div className="buttonOrMessageHolder">
                             <button className="register-button mt-3" type="submit" onClick={(e) => register(e)}>Register</button>
                         </div>
-                        <p className="label-register"><span>Already have an account ? </span><a id="log-link" href="login">Login</a></p>
+                        <p className="label-register"><span>Already have an account ? </span><Link id="log-link" to="/login">Login</Link></p>
                     </form>
                 </div>
             </div>

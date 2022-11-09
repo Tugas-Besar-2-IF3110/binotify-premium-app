@@ -12,6 +12,7 @@ const Registration = () => {
     const [errorEmail, setErrorEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [errorRegister, setErrorRegister] = useState('');
 
     const checkValidUsername = debounce(async (username: string) => {
         setErrorUsername('');
@@ -57,7 +58,26 @@ const Registration = () => {
 
     const register = (e: any) => {
         e.preventDefault();
-        
+        if (!nama) {
+            setErrorRegister('Nama is required');
+        } else if (!username && !errorUsername) {
+            setErrorRegister('Username is required');
+        } else if (!email && !errorEmail) {
+            setErrorRegister('Email is required');
+        } else if (!password) {
+            setErrorRegister('Password is required');
+        } else if (password !== confirmPassword) {
+            setErrorRegister('Password yang dimasukkan tidak sama');
+        } else {
+            axios.post(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/user`, {
+                email: email,
+                password: password,
+                username: username,
+                name: nama
+            }).then(response => {
+                console.log(response);
+            });
+        }
     }
 
     return (
@@ -93,13 +113,11 @@ const Registration = () => {
                         <input type="text" placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)} />
 
                         <div className="buttonOrMessageHolder">
-                            {true &&
-                                <p className="error register-message mt-3">Tes</p>
-                            }
+                            {errorRegister &&<p className="error register-message mt-3">{errorRegister}</p>}
                         </div>
 
                         <div className="buttonOrMessageHolder">
-                            <button className="register-button" type="submit" onClick={(e) => register(e)}>Register</button>
+                            <button className="register-button mt-3" type="submit" onClick={(e) => register(e)}>Register</button>
                         </div>
                         <p className="label-register"><span>Already have an account ? </span><a id="log-link" href="login">Login</a></p>
                     </form>

@@ -8,14 +8,14 @@ import Navbar from '../../components/Navbar'
 import './Registration.css'
 
 const Registration = () => {
-    const [nama, setNama] = useState('');
-    const [username, setUsername] = useState('');
-    const [errorUsername, setErrorUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [errorEmail, setErrorEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [errorRegister, setErrorRegister] = useState('');
+    const [nama, setNama] = useState(String);
+    const [username, setUsername] = useState(String);
+    const [errorUsername, setErrorUsername] = useState(String);
+    const [email, setEmail] = useState(String);
+    const [errorEmail, setErrorEmail] = useState(String);
+    const [password, setPassword] = useState(String);
+    const [confirmPassword, setConfirmPassword] = useState(String);
+    const [errorRegister, setErrorRegister] = useState(String);
     const [cookies, setCookies] = useCookies();
 
     const checkValidUsername = debounce(async (username: string) => {
@@ -26,7 +26,7 @@ const Registration = () => {
                     setUsername('');
                     setErrorUsername(response.data.error);
                 } else {
-                    if (response.data.length === 0) {
+                    if (!response.data) {
                         setUsername(username);
                     } else {
                         setUsername('');
@@ -47,7 +47,7 @@ const Registration = () => {
                     setEmail('');
                     setErrorEmail(response.data.error);
                 } else {
-                    if (response.data.length === 0) {
+                    if (!response.data) {
                         setEmail(email);
                     } else {
                         setEmail('');
@@ -62,25 +62,27 @@ const Registration = () => {
 
     const register = (e: any) => {
         e.preventDefault();
-        if (!nama) {
-            setErrorRegister('Nama is required');
-        } else if (!username && !errorUsername) {
-            setErrorRegister('Username is required');
-        } else if (!email && !errorEmail) {
-            setErrorRegister('Email is required');
-        } else if (!password) {
-            setErrorRegister('Password is required');
-        } else if (password !== confirmPassword) {
-            setErrorRegister('Password yang dimasukkan tidak sama');
-        } else {
-            axios.post(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/user`, {
-                email: email,
-                password: password,
-                username: username,
-                name: nama
-            }).then(response => {
-                setCookies('binotify_premium_token', response.data.token);
-            });
+        if (!errorUsername && !errorEmail) {
+            if (!nama) {
+                setErrorRegister('Nama is required');
+            } else if (!username) {
+                setErrorRegister('Username is required');
+            } else if (!email) {
+                setErrorRegister('Email is required');
+            } else if (!password) {
+                setErrorRegister('Password is required');
+            } else if (password !== confirmPassword) {
+                setErrorRegister('Password yang dimasukkan tidak sama');
+            } else {
+                axios.post(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/user/register`, {
+                    email: email,
+                    password: password,
+                    username: username,
+                    name: nama
+                }).then(response => {
+                    setCookies('binotify_premium_token', response.data.token);
+                });
+            }
         }
     }
 
@@ -111,10 +113,10 @@ const Registration = () => {
                         </div>
 
                         <label className="label-register">Password</label>
-                        <input type="text" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+                        <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
 
                         <label className="label-register">Confirm Password</label>
-                        <input type="text" placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)} />
+                        <input type="password" placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)} />
 
                         <div className="buttonOrMessageHolder">
                             {errorRegister &&<p className="error register-message mt-3">{errorRegister}</p>}

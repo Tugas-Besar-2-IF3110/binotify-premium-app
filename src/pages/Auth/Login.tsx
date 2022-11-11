@@ -42,7 +42,7 @@ const Login = () => {
                     </div>
                 </div>
                 <div className="login-block-middle">
-                    <form className="login-form" action="<?= BASE_PUBLIC_URL; ?>/auth/login" method="post">
+                    <form className="login-form">
                         <label className="label-login">Username</label>
                         <input type="text" placeholder="Username" onChange={(e) => {
                             setUsername(e.target.value);

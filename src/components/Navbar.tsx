@@ -22,9 +22,10 @@ const Navbar = () => {
             <div className="profile">
                 <img src="https://www.pngitem.com/pimgs/m/108-1084833_spotify-icon-spotify-icon-white-png-transparent-png.png" className="navbar-image" />
             </div>
-            {getToken() === true && <Link className="nav-text" to="add-premium-song">Daftar Permintaan Subscription</Link>}
-            {getToken() === false && <Link className="nav-text" to="add-premium-song">Tambah Lagu</Link>}
-            {getToken() === false && <Link className="nav-text" to="add-premium-song">Daftar Lagu</Link>}
+            {getToken() === true && <Link className="nav-text" to="/">Daftar Permintaan Subscription</Link>}
+            {getToken() === false && <Link className="nav-text" to="/add-song">Tambah Lagu</Link>}
+            {getToken() === false && <Link className="nav-text" to="/">Daftar Lagu</Link>}
+            {getToken() !== null && <a className="nav-text"><button type="button" className="btn-nav btn-logout">Log Out</button></a>}
         </nav>
     )
 }

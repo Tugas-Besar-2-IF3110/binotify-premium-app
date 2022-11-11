@@ -96,7 +96,7 @@ const Registration = () => {
                     </div>
                 </div>
                 <div className="register-block-middle">
-                    <form className="register-form" action="<?= BASE_PUBLIC_URL; ?>/auth/register" method="post" id="registration">
+                    <form className="register-form">
                         <label className="label-register">Nama</label>
                         <input type="text" placeholder="Nama" onChange={(e) => setNama(e.target.value)} />
 

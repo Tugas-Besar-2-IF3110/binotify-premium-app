@@ -6,6 +6,7 @@ import Login from "./pages/Auth/Login";
 import Registration from "./pages/Auth/Registration";
 
 import SongManagement from "./pages/SongManagement/SongManagement";
+import AddSong from "./pages/SongManagement/AddSong";
 
 import SubscriptionList from "./pages/SubscriptionList/SubscriptionList";
 
@@ -33,6 +34,7 @@ const RouteManager = () => {
 
                 {getToken() === false && <div>
                     <Route path="/" exact component={SongManagement} />
+                    <Route path="/add-song" component={AddSong} />
                     <Route path="*">
                         <Redirect to="/" />
                     </Route>

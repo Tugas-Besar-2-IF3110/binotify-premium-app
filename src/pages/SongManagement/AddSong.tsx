@@ -5,6 +5,7 @@ import './AddSong.css'
 
 const AddSong = () => {
     const [judul, setJudul] = useState('');
+    const [audioFile, setAudioFile] = useState();
     
     return (
         <div className='page-container'>
@@ -22,8 +23,15 @@ const AddSong = () => {
                         
                         <label className="label-add-song">Audio File (.mp3)</label>
                         <br></br>
-                        <audio controls className="song-add-audio" src=""></audio>
-                        <input type="file" placeholder="Audio File" accept="audio/*" />
+                        <audio controls className="song-add-audio"></audio>
+                        <input type="file" placeholder="Audio File" id="song_add_audio_input" accept="audio/*" onChange={(e) => {
+                            let files: any = e.target.files;
+                            let audio_source: any = document.querySelector('.song-add-audio');
+                            let song_add_audio: any = document.querySelector('.song-add-audio_input');
+                            audio_source.src = URL.createObjectURL(files[0]);
+                            song_add_audio.load();
+                            setAudioFile(files[0]);
+                        }} />
                         
                         <div className="buttonOrMessageHolder">
                             {true &&

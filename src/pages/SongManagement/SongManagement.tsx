@@ -10,12 +10,24 @@ const SongManagement = () => {
     const [songs, setSongs] = useState([]);
     const [cookies] = useCookies();
 
-    useEffect(() => {
-        axios.get(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/song`, {
+    const getSong = async () => {
+        await axios.get(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/song`, {
             headers: {'Authorization': 'Bearer ' + cookies.binotify_premium_token}
         }).then(response => {
             setSongs(response.data);
         });
+    }
+
+    const deleteSong = async (id: number) => {
+        await axios.delete(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/song/${id}`, {
+            headers: {'Authorization': 'Bearer ' + cookies.binotify_premium_token}
+        }).then(() => {
+            getSong();
+        })
+    } 
+
+    useEffect(() => {
+        getSong();
     }, []);
 
     return (
@@ -52,9 +64,7 @@ const SongManagement = () => {
                                         </Link>
                                     </td>
                                     <td className="album-detail-table-align-right bg-17-17-17 album-detail-songs-buttons">
-                                        <a href="<?php echo BASE_PUBLIC_URL">
-                                            <button className="album-detail-songs-button">Delete</button>
-                                        </a>
+                                        <button className="album-detail-songs-button" onClick={() => deleteSong(val.song_id)}>Delete</button>
                                     </td>
                                 </tr>
                             )

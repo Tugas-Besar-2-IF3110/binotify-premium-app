@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
 
@@ -46,9 +47,9 @@ const SongManagement = () => {
                                         <audio controls src={`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/song/${val.Audio_path}`}></audio>
                                     </td>
                                     <td className="album-detail-table-align-right bg-17-17-17 album-detail-songs-buttons">
-                                        <a href="<?php echo BASE_PUBLIC_URL">
+                                        <Link to={`/edit-song/${val.song_id}`}>
                                             <button className="album-detail-songs-button">Edit</button>
-                                        </a>
+                                        </Link>
                                     </td>
                                     <td className="album-detail-table-align-right bg-17-17-17 album-detail-songs-buttons">
                                         <a href="<?php echo BASE_PUBLIC_URL">

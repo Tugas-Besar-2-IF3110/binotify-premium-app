@@ -10,13 +10,37 @@ const SubscriptionList = () => {
     const [subscriptionList, setSubscriptionList] = useState([]);
     const [cookies] = useCookies();
 
-    useEffect(() => {
-        axios.get(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/subscription`, {
+    const ApproveOrRejectSubscription = async (creatorId: number, subscriberId: number, approve: boolean) => {
+        await axios.post(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/subscription/accept_or_reject`, {
+            creatorId: creatorId,
+            subscriberId: subscriberId,
+            approve: approve
+        }, {
             headers: {'Authorization': 'Bearer ' + cookies.binotify_premium_token}
         }).then(response => {
-            setSubscriptionList(response.data["S:Envelope"]["S:Body"]["ns2:listRequestSubscriptionResponse"]["return"]["list"])
-            console.log(response.data)
+            console.log(response.data);
+            getSubscriptionList();
         });
+    } 
+
+    const getSubscriptionList = async () => {
+        await axios.get(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/subscription`, {
+            headers: {'Authorization': 'Bearer ' + cookies.binotify_premium_token}
+        }).then(response => {
+            let subscription_data = response.data["S:Envelope"]["S:Body"]["ns2:listRequestSubscriptionResponse"]["return"]["list"];
+            if ("elements" in subscription_data) {
+                if (!subscription_data["elements"].length) {
+                    subscription_data["elements"] = [subscription_data["elements"]];
+                }
+                setSubscriptionList(subscription_data["elements"]);
+            } else {
+                setSubscriptionList([]);
+            }
+        });
+    }
+
+    useEffect(() => {
+        getSubscriptionList();
     }, []);
 
     return (
@@ -46,10 +70,10 @@ const SubscriptionList = () => {
                                     <td className="bg-17-17-17">{val.subscriberId._text}</td>
                                     <td className="subscription-list-table-align-left bg-17-17-17">{val.creatorId._text}</td>
                                     <td className="subscription-list-table-align-right bg-17-17-17 subscription-list-songs-buttons">
-                                        <button className="subscription-list-songs-button">Accept</button>
+                                        <button className="subscription-list-songs-button" onClick={() => ApproveOrRejectSubscription(val.creatorId._text, val.subscriberId._text, true)}>Accept</button>
                                     </td>
                                     <td className="subscription-list-table-align-right bg-17-17-17 subscription-list-songs-buttons">
-                                        <button className="subscription-list-songs-button">Reject</button>
+                                        <button className="subscription-list-songs-button" onClick={() => ApproveOrRejectSubscription(val.creatorId._text, val.subscriberId._text, false)}>Reject</button>
                                     </td>
                                 </tr>
                             )

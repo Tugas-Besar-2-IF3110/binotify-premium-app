@@ -8,13 +8,23 @@ import './SongManagement.css'
 
 const SongManagement = () => {
     const [songs, setSongs] = useState([]);
+    const [allSongs, setAllSongs] = useState([]);
     const [cookies] = useCookies();
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
 
     const getSong = async () => {
         await axios.get(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/song`, {
             headers: {'Authorization': 'Bearer ' + cookies.binotify_premium_token}
         }).then(response => {
-            setSongs(response.data);
+            setAllSongs(response.data);
+            let length: any = (response.data.length - 1) / 5
+            setLastPage(parseInt(length) + 1)
+            let song: any = [];
+            for (let i = 0; i < min(5, response.data.length); i++) {
+                song.push(response.data[i]);
+            }
+            setSongs(song);
         });
     }
 
@@ -25,6 +35,62 @@ const SongManagement = () => {
             getSong();
         })
     } 
+
+    const firstClick = () => {
+        if (page > 1) {
+            setPage(1);
+            const last = 1;
+            let song: any = [];
+            for (let i = (last - 1) * 5; i < min(allSongs.length, last * 5); i++) {
+                song[song.length] = allSongs[i];
+            }
+            setSongs(song);
+        }
+      }
+    
+      const prevClick = () => {
+        if (page > 1) {
+            setPage(page - 1);
+            const next = page - 1;
+            let song: any = [];
+            for (let i = (next - 1) * 5; i < min(allSongs.length, next * 5); i++) {
+                song[song.length] = allSongs[i];
+            }
+            setSongs(song);
+        }
+      }
+    
+      const nextClick = () => {
+        if (page < lastPage) {
+            setPage(page + 1);
+            const next = page + 1;
+            let song: any = [];
+            for (let i = (next - 1) * 5; i < min(allSongs.length, next * 5); i++) {
+                song[song.length] = allSongs[i];
+            }
+            setSongs(song);
+        }
+      }
+    
+      const lastClick = () => {
+        if (page < lastPage) {
+            setPage(lastPage);
+            const last = lastPage;
+            let song: any = [];
+            for (let i = (last - 1) * 5; i < min(allSongs.length, last * 5); i++) {
+                song[song.length] = allSongs[i];
+            }
+            setSongs(song);
+        }
+      }
+
+      const min = (a: number, b: number) => {
+        if (a < b) {
+          return a;
+        } else {
+          return b;
+        }
+      }
 
     useEffect(() => {
         getSong();
@@ -71,6 +137,19 @@ const SongManagement = () => {
                         })}
                     </table>
                 </div>}
+                <div className={`text-center text-white page fixed-bottom mb-5`}>
+                    <span className="mx-3" onClick={() => prevClick()}>{' < '}</span>
+                    {page > 1 && <span className="mx-3" onClick={() => firstClick()}>{' 1 '}</span>}
+                    {page - 2 > 1 && <span className="mx-3">{' .. '}</span>}
+                    {page - 1 > 1 && <span className="mx-3" onClick={() => prevClick()}>{` ${page - 1} `}</span>}
+
+                    <span className="mx-3 text-decoration-underline"><strong>{` ${page} `}</strong></span>
+
+                    {page + 1 < lastPage && <span className="mx-3" onClick={() => nextClick()}>{` ${page + 1} `}</span>}
+                    {page + 2 < lastPage && <span className="mx-3">{' .. '}</span>}
+                    {page < lastPage && <span className="mx-3" onClick={() => lastClick()}>{` ${lastPage} `}</span>}
+                    <span className="mx-3" onClick={() => nextClick()}>{' > '}</span>
+                </div>
             </div>
         </div>
     )

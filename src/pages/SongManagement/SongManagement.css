@@ -165,3 +165,7 @@ th, td {
 th {
 	text-align: left;
 }
+
+.page {
+    cursor: pointer;
+}

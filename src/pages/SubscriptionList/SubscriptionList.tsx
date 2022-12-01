@@ -8,7 +8,10 @@ import './SubscriptionList.css'
 
 const SubscriptionList = () => {
     const [subscriptionList, setSubscriptionList] = useState([]);
+    const [allSubscriptionList, setAllSubscriptionList] = useState([]);
     const [cookies] = useCookies();
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
 
     const ApproveOrRejectSubscription = async (creatorId: number, subscriberId: number, approve: boolean) => {
         await axios.post(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/subscription/accept_or_reject`, {
@@ -18,7 +21,6 @@ const SubscriptionList = () => {
         }, {
             headers: {'Authorization': 'Bearer ' + cookies.binotify_premium_token}
         }).then(response => {
-            console.log(response.data);
             getSubscriptionList();
         });
     } 
@@ -32,12 +34,76 @@ const SubscriptionList = () => {
                 if (!subscription_data["elements"].length) {
                     subscription_data["elements"] = [subscription_data["elements"]];
                 }
-                setSubscriptionList(subscription_data["elements"]);
+                setAllSubscriptionList(subscription_data["elements"]);
             } else {
-                setSubscriptionList([]);
+                subscription_data["elements"] = [];
+                setAllSubscriptionList([]);
             }
+            let length: any = (subscription_data["elements"].length - 1) / 5
+            setLastPage(parseInt(length) + 1)
+            let subscription: any = [];
+            for (let i = 0; i < min(5, subscription_data["elements"].length); i++) {
+                subscription.push(subscription_data["elements"][i]);
+            }
+            setSubscriptionList(subscription);
         });
     }
+
+    const firstClick = () => {
+        if (page > 1) {
+            setPage(1);
+            const last = 1;
+            let subscription: any = [];
+            for (let i = (last - 1) * 5; i < min(allSubscriptionList.length, last * 5); i++) {
+                subscription[subscription.length] = allSubscriptionList[i];
+            }
+            setSubscriptionList(subscription);
+        }
+      }
+    
+      const prevClick = () => {
+        if (page > 1) {
+            setPage(page - 1);
+            const next = page - 1;
+            let subscription: any = [];
+            for (let i = (next - 1) * 5; i < min(allSubscriptionList.length, next * 5); i++) {
+                subscription[subscription.length] = allSubscriptionList[i];
+            }
+            setSubscriptionList(subscription);
+        }
+      }
+    
+      const nextClick = () => {
+        if (page < lastPage) {
+            setPage(page + 1);
+            const next = page + 1;
+            let subscription: any = [];
+            for (let i = (next - 1) * 5; i < min(allSubscriptionList.length, next * 5); i++) {
+                subscription[subscription.length] = allSubscriptionList[i];
+            }
+            setSubscriptionList(subscription);
+        }
+      }
+    
+      const lastClick = () => {
+        if (page < lastPage) {
+            setPage(lastPage);
+            const last = lastPage;
+            let subscription: any = [];
+            for (let i = (last - 1) * 5; i < min(allSubscriptionList.length, last * 5); i++) {
+                subscription[subscription.length] = allSubscriptionList[i];
+            }
+            setSubscriptionList(subscription);
+        }
+      }
+
+      const min = (a: number, b: number) => {
+        if (a < b) {
+          return a;
+        } else {
+          return b;
+        }
+      }
 
     useEffect(() => {
         getSubscriptionList();
@@ -54,7 +120,7 @@ const SubscriptionList = () => {
                 </div>
 
                 {subscriptionList.length > 0 && <div className="subscription-list-block-bottomer">
-                    <table className="subscription-list-songs-table">
+                <table className="subscription-list-songs-table">
                         <tr>
                             <th className="bg-17-17-17">#</th>
                             <th className="bg-17-17-17">Subscriber ID</th>
@@ -80,6 +146,19 @@ const SubscriptionList = () => {
                         })}
                     </table>
                 </div>}
+                <div className={`text-center text-white page fixed-bottom mb-5`}>
+                    <span className="mx-3" onClick={() => prevClick()}>{' < '}</span>
+                    {page > 1 && <span className="mx-3" onClick={() => firstClick()}>{' 1 '}</span>}
+                    {page - 2 > 1 && <span className="mx-3">{' .. '}</span>}
+                    {page - 1 > 1 && <span className="mx-3" onClick={() => prevClick()}>{` ${page - 1} `}</span>}
+
+                    <span className="mx-3 text-decoration-underline"><strong>{` ${page} `}</strong></span>
+
+                    {page + 1 < lastPage && <span className="mx-3" onClick={() => nextClick()}>{` ${page + 1} `}</span>}
+                    {page + 2 < lastPage && <span className="mx-3">{' .. '}</span>}
+                    {page < lastPage && <span className="mx-3" onClick={() => lastClick()}>{` ${lastPage} `}</span>}
+                    <span className="mx-3" onClick={() => nextClick()}>{' > '}</span>
+                </div>
             </div>
         </div>
     )

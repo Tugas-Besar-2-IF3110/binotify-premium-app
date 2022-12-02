@@ -6,16 +6,16 @@ Aplikasi web yang dibuat merupakan sebuah aplikasi premium dari Binotify, yaitu 
 ## *Sreenshot* Tampilan Aplikasi
 
 ### Login
-<img src="screenshots/login.png" /><br>
+<img src="screenshots/login.jpg" /><br>
 
 ### Register
-<img src="screenshots/register.png" /><br>
+<img src="screenshots/register.jpg" /><br>
 
 ### Halaman Permintaan Subscription
-<img src="screenshots/subs.png" /><br>
+<img src="screenshots/subs.jpg" /><br>
 
 ### Halaman Pengelolaan Lagu
-<img src="screenshots/lagu.png" /><br>
+<img src="screenshots/lagu.jpg" /><br>
 
 ## Pembagian Tugas
 * Frontend & Backend Login: `13520160`<br>

@@ -16,6 +16,8 @@ Aplikasi web yang dibuat merupakan sebuah aplikasi premium dari Binotify, yaitu 
 
 ### Halaman Pengelolaan Lagu
 <img src="screenshots/lagu.jpg" /><br>
+<img src="screenshots/tambahlagu.jpg" /><br>
+<img src="screenshots/editlagu.jpg" /><br>
 
 ## Pembagian Tugas
 * Frontend & Backend Login: `13520160`<br>

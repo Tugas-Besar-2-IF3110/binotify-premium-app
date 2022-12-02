@@ -39,8 +39,9 @@ const SubscriptionList = () => {
                 subscription_data["elements"] = [];
                 setAllSubscriptionList([]);
             }
-            let length: any = (subscription_data["elements"].length - 1) / 5
-            setLastPage(parseInt(length) + 1)
+            let length: any = (subscription_data["elements"].length - 1) / 5;
+            setLastPage(parseInt(length) + 1);
+            setPage(1);
             let subscription: any = [];
             for (let i = 0; i < min(5, subscription_data["elements"].length); i++) {
                 subscription.push(subscription_data["elements"][i]);
@@ -132,7 +133,7 @@ const SubscriptionList = () => {
                         {subscriptionList.map((val: any, key: any) => {
                             return (
                                 <tr>
-                                    <td className="bg-17-17-17">{key + 1}</td>
+                                    <td className="bg-17-17-17">{key + (page - 1) * 4 + page}</td>
                                     <td className="bg-17-17-17">{val.subscriberId._text}</td>
                                     <td className="subscription-list-table-align-left bg-17-17-17">{val.creatorId._text}</td>
                                     <td className="subscription-list-table-align-right bg-17-17-17 subscription-list-songs-buttons">

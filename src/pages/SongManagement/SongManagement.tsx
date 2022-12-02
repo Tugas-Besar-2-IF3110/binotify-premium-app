@@ -18,8 +18,9 @@ const SongManagement = () => {
             headers: {'Authorization': 'Bearer ' + cookies.binotify_premium_token}
         }).then(response => {
             setAllSongs(response.data);
-            let length: any = (response.data.length - 1) / 5
-            setLastPage(parseInt(length) + 1)
+            let length: any = (response.data.length - 1) / 5;
+            setLastPage(parseInt(length) + 1);
+            setPage(1);
             let song: any = [];
             for (let i = 0; i < min(5, response.data.length); i++) {
                 song.push(response.data[i]);
@@ -119,7 +120,7 @@ const SongManagement = () => {
                         {songs.map((val: any, key: any) => {
                             return (
                                 <tr>
-                                    <td className="bg-17-17-17">{key + 1}</td>
+                                    <td className="bg-17-17-17">{key + (page - 1) * 4 + page}</td>
                                     <td className="bg-17-17-17">{val.Judul}</td>
                                     <td className="album-detail-table-align-right bg-17-17-17">
                                         <audio controls src={`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/song/${val.Audio_path}`}></audio>

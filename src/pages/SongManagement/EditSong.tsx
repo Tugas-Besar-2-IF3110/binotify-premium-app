@@ -16,28 +16,30 @@ const EditSong = () => {
 
     const editSong = async (e: any) => {
         e.preventDefault();
-        if (!audioFile) {
-            axios.put(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/song/title/${id}`, {
-                Judul: judul
-            }, {
-                headers: {
-                    'Authorization': 'Bearer ' + cookies.binotify_premium_token
-                }
-            }).then(() => {
-                history.push('/');
-            });
-        } else {
-            axios.put(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/song/all/${id}`, {
-                Judul: judul,
-                file: audioFile
-            }, {
-                headers: {
-                    'Authorization': 'Bearer ' + cookies.binotify_premium_token,
-                    'Content-Type': 'multipart/form-data'
-                }
-            }).then(() => {
-                history.push('/');
-            });
+        if (judul) {
+            if (!audioFile) {
+                axios.put(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/song/title/${id}`, {
+                    Judul: judul
+                }, {
+                    headers: {
+                        'Authorization': 'Bearer ' + cookies.binotify_premium_token
+                    }
+                }).then(() => {
+                    history.push('/');
+                });
+            } else {
+                axios.put(`${import.meta.env.VITE_BINOTIFY_PREMIUM_API}/song/all/${id}`, {
+                    Judul: judul,
+                    file: audioFile
+                }, {
+                    headers: {
+                        'Authorization': 'Bearer ' + cookies.binotify_premium_token,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(() => {
+                    history.push('/');
+                });
+            }
         }
     }
 
